@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -12,14 +11,18 @@
     --color-kazimiro: #22c55e; --color-keirrison: #ef4444;
   }
   * { box-sizing: border-box; font-family: 'Inter', system-ui, sans-serif; }
-  body { margin: 0; background-color: var(--bg); color: var(--text-main); font-smoothing: antialiased; padding: 24px; min-height: 100vh; }
+  body { margin: 0; background-color: var(--bg); color: var(--text-main); -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; padding: 24px; min-height: 100vh; }
   header { max-width: 900px; margin: 0 auto 24px auto; text-align: center; }
   header h1 { margin: 0; font-size: 24px; font-weight: 800; }
   #rankingTrofeus { max-width: 900px; margin: 0 auto 24px auto; padding: 10px 0; display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 12px; }
-  .rank-pill { padding: 10px 20px; border-radius: 999px; font-weight: 700; font-size: 16px; color: white; text-shadow: 1px 1px 2px rgba(0,0,0,0.2); }
+  .rank-pill { padding: 10px 20px; border-radius: 999px; font-weight: 700; font-size: 16px; color: white; text-shadow: 1px 1px 2px rgba(0,0,0,0.2); display: inline-flex; align-items: center; gap: 10px; }
   .rank-pill.player-neno { background-color: var(--color-neno); }
   .rank-pill.player-kazimiro { background-color: var(--color-kazimiro); }
   .rank-pill.player-keirrison { background-color: var(--color-keirrison); }
+  .rank-pill.retired { opacity: 0.75; }
+  .status-tag { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; padding: 3px 8px; border-radius: 999px; background: rgba(0,0,0,0.25); text-shadow: none; }
+  .status-tag.active::before { content: '● '; color: #bbf7d0; }
+  .status-tag.retired::before { content: '● '; color: #d1d5db; }
   #viewFilters { max-width: 900px; margin: 0 auto 16px auto; display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
   .view-filter-btn { background-color: var(--panel); color: var(--muted); border: 1px solid var(--border); font-weight: 600; padding: 8px 16px; cursor: pointer; border-radius: 8px; transition: all 0.2s ease; font-size: 14px; }
   .view-filter-btn:hover { background-color: #374151; color: var(--text-main); }
@@ -33,6 +36,7 @@
   #filtros select:focus, #filtros input:focus { border-color: var(--accent); }
   #galeriaEstande { max-width: 900px; margin: 0 auto 30px auto; display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 16px; }
   .trofeuCard { background: var(--panel); padding: 16px; border-radius: 12px; border: 1px solid var(--border); text-align: center; position: relative; transition: transform 0.2s ease, box-shadow 0.2s ease; }
+  .trofeuCard:hover { transform: translateY(-4px); box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
   .trofeu-icon { font-size: 4.5rem; line-height: 1; height: 140px; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0) 70%); border-radius: 8px; }
   .trofeuCard h3 { margin: 5px 0 2px 0; font-weight: 700; font-size: 18px; color: var(--text-main); }
   .trofeuCard p { margin: 2px 0; font-size: 14px; color: var(--muted); min-height: 20px; }
@@ -41,12 +45,64 @@
   .player-kazimiro { background-color: #166534; border-color: var(--color-kazimiro); color: #dcfce7; }
   .player-keirrison { background-color: #991b1b; border-color: var(--color-keirrison); color: #fee2e2; }
   .emptyMsg { text-align: center; color: var(--muted); font-style: italic; grid-column: 1 / -1; padding: 20px 0; }
+
+  /* ===== Abas e Perfis ===== */
+  #mainTabs { max-width: 900px; margin: 0 auto 20px auto; display: flex; gap: 8px; justify-content: center; }
+  .tab-btn { background: var(--panel); color: var(--muted); border: 1px solid var(--border); font-weight: 700; padding: 10px 22px; cursor: pointer; border-radius: 999px; font-size: 14px; transition: all 0.2s ease; }
+  .tab-btn:hover { color: var(--text-main); }
+  .tab-btn.active { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+  .rank-pill[data-player] { cursor: pointer; }
+  .rank-pill[data-player]:hover { filter: brightness(1.1); }
+
+  #viewPerfis { max-width: 900px; margin: 0 auto 30px auto; }
+  #perfilSeletor { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-bottom: 20px; }
+  .profile-pick { border-width: 2px; border-style: solid; border-radius: 999px; padding: 8px 22px; font-weight: 700; font-size: 14px; cursor: pointer; opacity: 0.55; transition: all 0.2s ease; }
+  .profile-pick:hover { opacity: 0.85; }
+  .profile-pick.active { opacity: 1; box-shadow: 0 0 0 3px rgba(255,255,255,0.12); }
+
+  .profile-head { background: var(--panel); border: 1px solid var(--border); border-left: 6px solid var(--pcolor); border-radius: 12px; padding: 16px 20px; margin-bottom: 16px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .profile-head h2 { margin: 0; font-size: 26px; font-weight: 800; }
+  .profile-head .status-tag { background: rgba(255,255,255,0.1); }
+
+  .profile-tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 12px; margin-bottom: 16px; }
+  .profile-tile { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 14px 8px; text-align: center; }
+  .tile-icon { font-size: 22px; display: block; }
+  .tile-value { font-size: 26px; font-weight: 800; display: block; margin: 4px 0 2px 0; }
+  .tile-label { font-size: 12px; color: var(--muted); }
+
+  .profile-block { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin-bottom: 16px; }
+  .profile-block h3 { margin: 0 0 12px 0; font-size: 16px; }
+  .profile-note { font-size: 12px; color: var(--muted); margin: 10px 0 0 0; }
+
+  .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 10px; }
+  .stat-cell { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 10px; text-align: center; display: flex; flex-direction: column; gap: 6px; }
+  .stat-cell span { font-size: 12px; color: var(--muted); }
+  .stat-cell strong { font-size: 20px; }
+  .stat-input { width: 100%; background: var(--panel); border: 1px solid var(--border); border-radius: 6px; color: var(--text-main); padding: 6px; font-size: 16px; text-align: center; }
+
+  .entry-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+  .entry-list li { display: flex; justify-content: space-between; align-items: center; gap: 8px; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 8px 12px; font-size: 14px; }
+  .entry-main { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+  .entry-chip { font-size: 12px; color: var(--muted); background: var(--panel); border: 1px solid var(--border); border-radius: 999px; padding: 2px 10px; }
+  .entry-emoji { font-size: 20px; }
+  .entry-list li.entry-empty { color: var(--muted); font-style: italic; justify-content: center; }
+  .entry-del { background: #4b5563; color: white; border: none; border-radius: 50%; width: 24px; height: 24px; cursor: pointer; flex-shrink: 0; font-size: 16px; line-height: 1; }
+  .entry-del:hover { background: #ef4444; }
+
+  .list-add { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+  .list-add input { flex: 1 1 140px; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 10px; color: var(--text-main); font-size: 14px; }
+  .list-add input:focus, .stat-input:focus { border-color: var(--accent); outline: none; }
 </style>
 </head>
 <body>
 <header><h1>🏆 Estande de Troféus</h1></header>
-<section id="rankingTrofeus"></section>
-<section id="viewFilters">
+<nav id="mainTabs" aria-label="Seções">
+  <button class="tab-btn active" data-tab="estande">🏆 Estande</button>
+  <button class="tab-btn" data-tab="perfis">👤 Perfis</button>
+</nav>
+<div id="viewEstande">
+<section id="rankingTrofeus" aria-label="Ranking de competidores"></section>
+<section id="viewFilters" aria-label="Filtro de tipo de item">
   <button class="view-filter-btn active" data-filter="all">Todos</button>
   <button class="view-filter-btn" data-filter="by-year">Por Ano</button>
   <button class="view-filter-btn" data-filter="by-month">Por Mês</button>
@@ -55,40 +111,344 @@
   <button class="view-filter-btn" data-filter="premio">Prêmios</button>
 </section>
 <section id="monthSubFilters" class="sub-filters-container"></section>
-<section id="filtros">
-  <select id="filtroCompetidor"><option value="">Todos os competidores</option><option value="Neno">Neno</option><option value="Kazimiro">Kazimiro</option><option value="Keirrison">Keirrison</option></select>
-  <input type="text" id="filtroBusca" placeholder="Pesquisar..." />
+<section id="filtros" aria-label="Filtros secundários">
+  <select id="filtroCompetidor" aria-label="Filtrar por competidor">
+    <option value="">Todos os competidores</option>
+    <option value="Neno">Neno</option>
+    <option value="Kazimiro">Kazimiro</option>
+    <option value="Keirrison">Keirrison</option>
+  </select>
+  <input type="text" id="filtroBusca" placeholder="Pesquisar..." aria-label="Pesquisar troféus" />
 </section>
-<main id="galeriaEstande"></main>
+<main id="galeriaEstande" aria-live="polite"></main>
+</div>
+<div id="viewPerfis" style="display:none">
+  <section id="perfilSeletor" aria-label="Escolher competidor"></section>
+  <section id="perfilConteudo"></section>
+</div>
 <script>
-// --- SCRIPT DA PÁGINA PÚBLICA (SOMENTE VISUALIZAÇÃO) ---
-let items = [{"id":1754697114410,"type":"trofeu","name":"Copa dos Crias","desc":"","player":"Neno","competition":"Copa dos Crias","year":"2023","emoji":""},{"id":1754697139677,"type":"trofeu","name":"Superliga 2024","desc":"","player":"Neno","competition":"Superliga","year":"2024","emoji":""},{"id":1754697176134,"type":"trofeu","name":"Supercopa 2024","desc":"","player":"Neno","competition":"Supercopa do Brasil","year":"2024","emoji":""},{"id":1754697197971,"type":"trofeu","name":"EURO 2024","desc":"","player":"Neno","competition":"Eurocopa","year":"2024","emoji":""},{"id":1754697227668,"type":"trofeu","name":"Copa América 2024","desc":"","player":"Neno","competition":"Copa América","year":"2024","emoji":""},{"id":1754697276715,"type":"trofeu","name":"Brasileirão 2024","desc":"","player":"Neno","competition":"Brasileirão","year":"2024","emoji":"🏆"},{"id":1754697314844,"type":"trofeu","name":"Finalíssima 2024","desc":"","player":"Neno","competition":"Finalíssima","year":"2024","emoji":""},{"id":1754697332147,"type":"trofeu","name":"Copinha 2024","desc":"","player":"Neno","competition":"Copinha","year":"2024","emoji":""},{"id":1754697354770,"type":"trofeu","name":"Copa do Brasil 2024","desc":"","player":"Neno","competition":"Copa do Brasil","year":"2024","emoji":""},{"type":"trofeu","name":"Soccer Champions Tour 1","desc":"","player":"Neno","competition":"Soccer Champions Tour","month":"Janeiro","year":"2025","emoji":"⚽","id":1754697408305},{"type":"trofeu","name":"Soccer Champions Tour 2","desc":"","player":"Neno","competition":"Soccer Champions Tour","month":"Janeiro","year":"2025","emoji":"⚽","id":1754697433003},{"type":"trofeu","name":"Soccer Champions Tour - Final F&C","desc":"","player":"Neno","competition":"Soccer Champions Tour","month":"Janeiro","year":"2025","emoji":"⚽","id":1754697463197},{"type":"trofeu","name":"Supercopa 2025","desc":"","player":"Neno","competition":"Supercopa do Brasil","month":"Janeiro","year":"2025","emoji":"","id":1754697498853},{"type":"trofeu","name":"Superliga 2025","desc":"","player":"Neno","competition":"Superliga","month":"Fevereiro","year":"2025","emoji":"","id":1754697516196},{"type":"trofeu","name":"Nations League 24/25","desc":"","player":"Neno","competition":"Nations League","month":"Maio","year":"2025","emoji":"🏅","id":1754697567752},{"id":1754697629045,"type":"trofeu","name":"Camp. PES6","desc":"","player":"Kazimiro","competition":"Camp. PES6","year":"2023","emoji":""},{"type":"trofeu","name":"Soccer Champions Tour 1","desc":"","player":"Kazimiro","competition":"Soccer Champions Tour","month":"Janeiro","year":"2025","emoji":"⚽","id":1754697653657},{"type":"trofeu","name":"Soccer Champions Tour 2","desc":"","player":"Kazimiro","competition":"Soccer Champions Tour","month":"Janeiro","year":"2025","emoji":"","id":1754697694920},{"type":"trofeu","name":"Copa Challenger","desc":"","player":"Kazimiro","competition":"Pre Season Cup 2025","month":"Janeiro","year":"2025","emoji":"","id":1754697798805},{"type":"trofeu","name":"Copa Dérbi DC","desc":"","player":"Kazimiro","competition":"Pre Season Cup 2025","month":"Janeiro","year":"2025","emoji":"","id":1754697819027},{"type":"trofeu","name":"Champions League 24/25","desc":"","player":"Kazimiro","competition":"Champions League","month":"Janeiro","year":"2025","emoji":"","id":1754697848953},{"type":"trofeu","name":"Copa Checkmate","desc":"","player":"Kazimiro","competition":"Pre Season Cup 2025","month":"Janeiro","year":"2025","emoji":"","id":1754697886975},{"type":"trofeu","name":"Copa da Superliga 2025","desc":"","player":"Kazimiro","competition":"Superliga 2025","month":"Maio","year":"2025","emoji":"","id":1754697916432},{"id":1754697947566,"type":"trofeu","name":"Camp. PES 13","desc":"","player":"Keirrison","competition":"Camp. PES 13","year":"2024","emoji":""},{"id":1754698063220,"type":"trofeu","name":"Rivals 2024","desc":"","player":"Keirrison","competition":"Rivals","year":"2024","emoji":""},{"id":1754698086528,"type":"trofeu","name":"Intercopa 2024","desc":"","player":"Keirrison","competition":"Intercopa","year":"2024","emoji":""},{"type":"trofeu","name":"Soccer Champions Tour 1","desc":"","player":"Keirrison","competition":"Soccer Champions Tour ","month":"Janeiro","year":"2025","emoji":"","id":1754698125223},{"type":"trofeu","name":"Soccer Champions Tour 2","desc":"","player":"Keirrison","competition":"Soccer Champions Tour ","month":"Janeiro","year":"2025","emoji":"","id":1754698145462},{"type":"trofeu","name":"Soccer Champions Tour Final G&P","desc":"","player":"Keirrison","competition":"Soccer Champions Tour ","month":"Janeiro","year":"2025","emoji":"","id":1754698170644},{"type":"trofeu","name":"HouseBet Trophy","desc":"","player":"Keirrison","competition":"Soccer Champions Tour ","month":"Janeiro","year":"2025","emoji":"","id":1754698191017},{"type":"trofeu","name":"Copa do Mundo FIKA 2025","desc":"","player":"Keirrison","competition":"Copa do Mundo","month":"Julho","year":"2025","emoji":"","id":1754698221655},{"type":"trofeu","name":"Intercontinental 2025","desc":"","player":"Keirrison","competition":"Copa Intercontinental de Clubes","month":"Julho","year":"2025","emoji":"","id":1754698260737},{"type":"premio","name":"Melhor da Temporada (The Best 2024)","desc":"","player":"Neno","competition":"","month":"","year":"","emoji":"","id":1754701564761},{"type":"premio","name":"Melhor da Temporada (The Best 2024)","desc":"","player":"Kazimiro","competition":"","month":"","year":"","emoji":"","id":1754701589539},{"type":"premio","name":"Quebrador de Recordes (The Best 2024)","desc":"","player":"Keirrison","competition":"","month":"","year":"","emoji":"","id":1754701624166},{"type":"premio","name":"G.O.A.T 2025","desc":"","player":"Keirrison","competition":"","month":"","year":"","emoji":"","id":1754701666392},{"type":"premio","name":"Bola de Prata 24/25 🔮","desc":"","player":"Neno","competition":"","month":"","year":"","emoji":"","id":1754701719312},{"type":"trofeu","name":"Brasileirão 2025","desc":"","player":"Neno","competition":"Brasileirão","month":"Agosto","year":"2025","emoji":"🏆","id":1755379862830},{"type":"trofeu","name":"Split Regular 2025","desc":"","player":"Neno","competition":"Kings League 2025","month":"Outubro","year":"2025","emoji":"🏆","id":1760767494003},{"type":"trofeu","name":"Troféu Mundo","desc":"","player":"Neno","competition":"Copa Interglobal da FIKA 2025","month":"Outubro","year":"2025","emoji":"🏆","id":1760767531711},{"type":"trofeu","name":"Troféu Globo","desc":"","player":"Keirrison","competition":"Copa Interglobal da FIKA 2025","month":"Outubro","year":"2025","emoji":"🏆","id":1760990895291},{"type":"trofeu","name":"Libertadores 2025","desc":"","player":"Kazimiro","competition":"Libertadores","month":"Outubro","year":"2025","emoji":"🏆","id":1761337625783},{"type":"trofeu","name":"Copa Interglobal da FIKA 2025","desc":"","player":"Neno","competition":"Copa Interglobal da FIKA 2025","month":"Outubro","year":"2025","emoji":"🏆","id":1761338928144},{"type":"trofeu","name":"Kings League Final 2025","desc":"","player":"Neno","competition":"Kings League","month":"Outubro","year":"2025","emoji":"🏆","id":1761844813403},{"type":"trofeu","name":"Copa do Brasil 2025","desc":"","player":"Kazimiro","competition":"Copa do Brasil","month":"Dezembro","year":"2025","emoji":"","id":1766087815259},{"type":"trofeu","name":"Supercopa do Brasil 2025","desc":"","player":"Neno","competition":"Supercopa do Brasil","month":"Dezembro","year":"2025","emoji":"","id":1766088104689},{"type":"premio","name":"Melhor da Temporada (The Best 2025)","desc":"","player":"Neno","competition":"","month":"","year":"","emoji":"","id":1766311450699},{"type":"premio","name":"Títulos Inesperados / Temporada e Campanha Surpreendente (The Best 2025)","desc":"","player":"Kazimiro","competition":"","month":"","year":"","emoji":"","id":1766311516830},{"type":"trofeu","name":"Flórida Cup 2026","desc":"","player":"Neno","competition":"Flórida Cup 2026","month":"Janeiro","year":"2026","emoji":"","id":1768191213210},{"type":"trofeu","name":"UCRIA Champions League","desc":"","player":"Keirrison","competition":"Champions League 25/26","month":"Maio","year":"2026","emoji":"","id":1780079961352},{"type":"trofeu","name":"Supercopa dos Campeões 2026","desc":"","player":"Neno","competition":"Supercopa doa Campeões","month":"Junho","year":"2026","emoji":"","id":1780681752679},{"type":"trofeu","name":"Copa do Mundo de Clubes","desc":"","player":"Keirrison","competition":"Copa do Mundo de Clubes","month":"Agosto","year":"2026","emoji":"","id":1786388360566},{"type":"trofeu","name":"Supercopa Mundial 2026","desc":"","player":"Neno","competition":"Supercopa Mundial","month":"Agosto","year":"2026","emoji":"","id":1787382535406},{"type":"trofeu","name":"Copa Africana de Nações","desc":"","player":"Keirrison","competition":"AFCONAS","month":"Setembro","year":"2026","emoji":"","id":1790881034932},{"type":"premio","name":"Jogador Regular do Ano (The Best 2026)","desc":"","player":"Neno","competition":"","month":"","year":"","emoji":"","id":1791911742326},{"type":"premio","name":"Jogador Mais Decisivo (The Best 2026)","desc":"","player":"Keirrison","competition":"","month":"","year":"","emoji":"","id":1791911783060},{"type":"premio","name":"Clube do Ano (Fortaleza - The Best 2026)","desc":"","player":"Neno","competition":"","month":"","year":"","emoji":"","id":1791911817824},{"type":"premio","name":"Melhor Campanha Internacional (The Best 2026)","desc":"","player":"Keirrison","competition":"","month":"","year":"","emoji":"","id":1791911873875},{"type":"premio","name":"Técnico do Ano (The Best 2026)","desc":"","player":"Neno","competition":"","month":"","year":"","emoji":"","id":1791911897061},{"type":"premio","name":"The Best Men Player 2026","desc":"","player":"Keirrison","competition":"","month":"","year":"","emoji":"","id":1791911908126},{"type":"premio","name":"G.O.A.T 2026","desc":"","player":"Neno","competition":"","month":"","year":"","emoji":"","id":1792565162685},{"type":"trofeu","name":"Copa dos Piores","desc":"","player":"Keirrison","competition":"Copa dos Piores","month":"Outubro","year":"2026","emoji":"","id":1792779055067},{"type":"premio","name":"Fair-Play (Bola de Ouro 2026)","desc":"","player":"Keirrison","competition":"","month":"","year":"","emoji":"","id":1793115089307},{"type":"premio","name":"Chuteira de Ouro (Bola de Ouro 2026)","desc":"","player":"Neno","competition":"","month":"","year":"","emoji":"","id":1793115109453},{"type":"premio","name":"Jogador Mais Regular (Bola de Ouro 2026)","desc":"","player":"Neno","competition":"","month":"","year":"","emoji":"","id":1793115129329},{"type":"premio","name":"Quebrador de Recordes (Bola de Ouro 2026)","desc":"","player":"Keirrison","competition":"","month":"","year":"","emoji":"","id":1793115152532},{"type":"premio","name":"Rei das Competições (Bola de Ouro 2026)","desc":"","player":"Neno","competition":"","month":"","year":"","emoji":"","id":1793115171629},{"type":"premio","name":"Prêmio Legacy (Bola de Ouro 2026)","desc":"","player":"Kazimiro","competition":"","month":"","year":"","emoji":"","id":1793115201805},{"type":"premio","name":"Jogador do Ano (Bola de Ouro 2026)","desc":"","player":"Keirrison","competition":"","month":"","year":"","emoji":"","id":1793115220716},{"type":"premio","name":"Time Mais Regular/Time do Ano (Bola de Ouro 2026)","desc":"Fortaleza","player":"Neno","competition":"","month":"","year":"","emoji":"","id":1793115243606},{"type":"premio","name":"Seleção do Ano (Bola de Ouro 2026)","desc":"Espanha","player":"Keirrison","competition":"","month":"","year":"","emoji":"","id":1793115276458},{"type":"premio","name":"Bola de Ouro 2026","desc":"Vencedor","player":"Keirrison","competition":"","month":"","year":"","emoji":"","id":1793115299731},{"type":"trofeu","name":"Intercontinental 2026","desc":"","player":"Neno","competition":"Intercontinental","month":"Outubro","year":"2026","emoji":"","id":1793386751742}];
+// --- PÁGINA PÚBLICA (SOMENTE VISUALIZAÇÃO) ---
+// Os dados abaixo são preenchidos automaticamente pelo botão "Gerar Página Pública" do painel admin.
+let items = /*DATA_START*/[{"id":1754697114410,"type":"trofeu","name":"Copa dos Crias","desc":"","player":"Neno","competition":"Copa dos Crias","year":"2023","emoji":""},{"id":1754697139677,"type":"trofeu","name":"Superliga 2024","desc":"","player":"Neno","competition":"Superliga","year":"2024","emoji":""},{"id":1754697176134,"type":"trofeu","name":"Supercopa 2024","desc":"","player":"Neno","competition":"Supercopa do Brasil","year":"2024","emoji":""},{"id":1754697197971,"type":"trofeu","name":"EURO 2024","desc":"","player":"Neno","competition":"Eurocopa","year":"2024","emoji":""},{"id":1754697227668,"type":"trofeu","name":"Copa América 2024","desc":"","player":"Neno","competition":"Copa América","year":"2024","emoji":""},{"id":1754697276715,"type":"trofeu","name":"Brasileirão 2024","desc":"","player":"Neno","competition":"Brasileirão","year":"2024","emoji":"🏆"},{"id":1754697314844,"type":"trofeu","name":"Finalíssima 2024","desc":"","player":"Neno","competition":"Finalíssima","year":"2024","emoji":""},{"id":1754697332147,"type":"trofeu","name":"Copinha 2024","desc":"","player":"Neno","competition":"Copinha","year":"2024","emoji":""},{"id":1754697354770,"type":"trofeu","name":"Copa do Brasil 2024","desc":"","player":"Neno","competition":"Copa do Brasil","year":"2024","emoji":""},{"type":"trofeu","name":"Soccer Champions Tour 1","desc":"","player":"Neno","competition":"Soccer Champions Tour","month":"Janeiro","year":"2025","emoji":"⚽","id":1754697408305},{"type":"trofeu","name":"Soccer Champions Tour 2","desc":"","player":"Neno","competition":"Soccer Champions Tour","month":"Janeiro","year":"2025","emoji":"⚽","id":1754697433003},{"type":"trofeu","name":"Soccer Champions Tour - Final F&C","desc":"","player":"Neno","competition":"Soccer Champions Tour","month":"Janeiro","year":"2025","emoji":"⚽","id":1754697463197},{"type":"trofeu","name":"Supercopa 2025","desc":"","player":"Neno","competition":"Supercopa do Brasil","month":"Janeiro","year":"2025","emoji":"","id":1754697498853},{"type":"trofeu","name":"Superliga 2025","desc":"","player":"Neno","competition":"Superliga","month":"Fevereiro","year":"2025","emoji":"","id":1754697516196},{"type":"trofeu","name":"Nations League 24/25","desc":"","player":"Neno","competition":"Nations League","month":"Maio","year":"2025","emoji":"🏅","id":1754697567752},{"id":1754697629045,"type":"trofeu","name":"Camp. PES6","desc":"","player":"Kazimiro","competition":"Camp. PES6","year":"2023","emoji":""},{"type":"trofeu","name":"Soccer Champions Tour 1","desc":"","player":"Kazimiro","competition":"Soccer Champions Tour","month":"Janeiro","year":"2025","emoji":"⚽","id":1754697653657},{"type":"trofeu","name":"Soccer Champions Tour 2","desc":"","player":"Kazimiro","competition":"Soccer Champions Tour","month":"Janeiro","year":"2025","emoji":"","id":1754697694920},{"type":"trofeu","name":"Copa Challenger","desc":"","player":"Kazimiro","competition":"Pre Season Cup 2025","month":"Janeiro","year":"2025","emoji":"","id":1754697798805},{"type":"trofeu","name":"Copa Dérbi DC","desc":"","player":"Kazimiro","competition":"Pre Season Cup 2025","month":"Janeiro","year":"2025","emoji":"","id":1754697819027},{"type":"trofeu","name":"Champions League 24/25","desc":"","player":"Kazimiro","competition":"Champions League","month":"Janeiro","year":"2025","emoji":"","id":1754697848953},{"type":"trofeu","name":"Copa Checkmate","desc":"","player":"Kazimiro","competition":"Pre Season Cup 2025","month":"Janeiro","year":"2025","emoji":"","id":1754697886975},{"type":"trofeu","name":"Copa da Superliga 2025","desc":"","player":"Kazimiro","competition":"Superliga 2025","month":"Maio","year":"2025","emoji":"","id":1754697916432},{"id":1754697947566,"type":"trofeu","name":"Camp. PES 13","desc":"","player":"Keirrison","competition":"Camp. PES 13","year":"2024","emoji":""},{"id":1754698063220,"type":"trofeu","name":"Rivals 2024","desc":"","player":"Keirrison","competition":"Rivals","year":"2024","emoji":""},{"id":1754698086528,"type":"trofeu","name":"Intercopa 2024","desc":"","player":"Keirrison","competition":"Intercopa","year":"2024","emoji":""},{"type":"trofeu","name":"Soccer Champions Tour 1","desc":"","player":"Keirrison","competition":"Soccer Champions Tour ","month":"Janeiro","year":"2025","emoji":"","id":1754698125223},{"type":"trofeu","name":"Soccer Champions Tour 2","desc":"","player":"Keirrison","competition":"Soccer Champions Tour ","month":"Janeiro","year":"2025","emoji":"","id":1754698145462},{"type":"trofeu","name":"Soccer Champions Tour Final G&P","desc":"","player":"Keirrison","competition":"Soccer Champions Tour ","month":"Janeiro","year":"2025","emoji":"","id":1754698170644},{"type":"trofeu","name":"HouseBet Trophy","desc":"","player":"Keirrison","competition":"Soccer Champions Tour ","month":"Janeiro","year":"2025","emoji":"","id":1754698191017},{"type":"trofeu","name":"Copa do Mundo FIKA 2025","desc":"","player":"Keirrison","competition":"Copa do Mundo","month":"Julho","year":"2025","emoji":"","id":1754698221655},{"type":"trofeu","name":"Intercontinental 2025","desc":"","player":"Keirrison","competition":"Copa Intercontinental de Clubes","month":"Julho","year":"2025","emoji":"","id":1754698260737},{"type":"premio","name":"Melhor da Temporada (The Best 2024)","desc":"","player":"Neno","competition":"","month":"","year":"","emoji":"","id":1754701564761},{"type":"premio","name":"Melhor da Temporada (The Best 2024)","desc":"","player":"Kazimiro","competition":"","month":"","year":"","emoji":"","id":1754701589539},{"type":"premio","name":"Quebrador de Recordes (The Best 2024)","desc":"","player":"Keirrison","competition":"","month":"","year":"","emoji":"","id":1754701624166},{"type":"premio","name":"G.O.A.T 2025","desc":"","player":"Keirrison","competition":"","month":"","year":"","emoji":"","id":1754701666392},{"type":"premio","name":"Bola de Prata 24/25 🔮","desc":"","player":"Neno","competition":"","month":"","year":"","emoji":"","id":1754701719312},{"type":"trofeu","name":"Brasileirão 2025","desc":"","player":"Neno","competition":"Brasileirão","month":"Agosto","year":"2025","emoji":"🏆","id":1755379862830},{"type":"trofeu","name":"Split Regular 2025","desc":"","player":"Neno","competition":"Kings League 2025","month":"Outubro","year":"2025","emoji":"🏆","id":1760767494003},{"type":"trofeu","name":"Troféu Mundo","desc":"","player":"Neno","competition":"Copa Interglobal da FIKA 2025","month":"Outubro","year":"2025","emoji":"🏆","id":1760767531711},{"type":"trofeu","name":"Troféu Globo","desc":"","player":"Keirrison","competition":"Copa Interglobal da FIKA 2025","month":"Outubro","year":"2025","emoji":"🏆","id":1760990895291},{"type":"trofeu","name":"Libertadores 2025","desc":"","player":"Kazimiro","competition":"Libertadores","month":"Outubro","year":"2025","emoji":"🏆","id":1761337625783},{"type":"trofeu","name":"Copa Interglobal da FIKA 2025","desc":"","player":"Neno","competition":"Copa Interglobal da FIKA 2025","month":"Outubro","year":"2025","emoji":"🏆","id":1761338928144},{"type":"trofeu","name":"Kings League Final 2025","desc":"","player":"Neno","competition":"Kings League","month":"Outubro","year":"2025","emoji":"🏆","id":1761844813403},{"type":"trofeu","name":"Copa do Brasil 2025","desc":"","player":"Kazimiro","competition":"Copa do Brasil","month":"Dezembro","year":"2025","emoji":"","id":1766087815259},{"type":"trofeu","name":"Supercopa do Brasil 2025","desc":"","player":"Neno","competition":"Supercopa do Brasil","month":"Dezembro","year":"2025","emoji":"","id":1766088104689},{"type":"premio","name":"Melhor da Temporada (The Best 2025)","desc":"","player":"Neno","competition":"","month":"","year":"","emoji":"","id":1766311450699},{"type":"premio","name":"Títulos Inesperados / Temporada e Campanha Surpreendente (The Best 2025)","desc":"","player":"Kazimiro","competition":"","month":"","year":"","emoji":"","id":1766311516830},{"type":"trofeu","name":"Flórida Cup 2026","desc":"","player":"Neno","competition":"Flórida Cup 2026","month":"Janeiro","year":"2026","emoji":"","id":1768191213210},{"type":"trofeu","name":"UCRIA Champions League","desc":"","player":"Keirrison","competition":"Champions League 25/26","month":"Maio","year":"2026","emoji":"","id":1780079961352},{"type":"trofeu","name":"Supercopa dos Campeões 2026","desc":"","player":"Neno","competition":"Supercopa doa Campeões","month":"Junho","year":"2026","emoji":"","id":1780681752679},{"type":"trofeu","name":"Copa do Mundo de Clubes","desc":"","player":"Keirrison","competition":"Copa do Mundo de Clubes","month":"Agosto","year":"2026","emoji":"","id":1786388360566},{"type":"trofeu","name":"Supercopa Mundial 2026","desc":"","player":"Neno","competition":"Supercopa Mundial","month":"Agosto","year":"2026","emoji":"","id":1787382535406},{"type":"trofeu","name":"Copa Africana de Nações","desc":"","player":"Keirrison","competition":"AFCONAS","month":"Setembro","year":"2026","emoji":"","id":1790881034932},{"type":"premio","name":"Jogador Regular do Ano (The Best 2026)","desc":"","player":"Neno","competition":"","month":"","year":"","emoji":"","id":1791911742326},{"type":"premio","name":"Jogador Mais Decisivo (The Best 2026)","desc":"","player":"Keirrison","competition":"","month":"","year":"","emoji":"","id":1791911783060},{"type":"premio","name":"Clube do Ano (Fortaleza - The Best 2026)","desc":"","player":"Neno","competition":"","month":"","year":"","emoji":"","id":1791911817824},{"type":"premio","name":"Melhor Campanha Internacional (The Best 2026)","desc":"","player":"Keirrison","competition":"","month":"","year":"","emoji":"","id":1791911873875},{"type":"premio","name":"Técnico do Ano (The Best 2026)","desc":"","player":"Neno","competition":"","month":"","year":"","emoji":"","id":1791911897061},{"type":"premio","name":"The Best Men Player 2026","desc":"","player":"Keirrison","competition":"","month":"","year":"","emoji":"","id":1791911908126},{"type":"premio","name":"G.O.A.T 2026","desc":"","player":"Neno","competition":"","month":"","year":"","emoji":"","id":1792565162685},{"type":"trofeu","name":"Copa dos Piores","desc":"","player":"Keirrison","competition":"Copa dos Piores","month":"Outubro","year":"2026","emoji":"","id":1792779055067},{"type":"premio","name":"Fair-Play (Bola de Ouro 2026)","desc":"","player":"Keirrison","competition":"","month":"","year":"","emoji":"","id":1793115089307},{"type":"premio","name":"Chuteira de Ouro (Bola de Ouro 2026)","desc":"","player":"Neno","competition":"","month":"","year":"","emoji":"","id":1793115109453},{"type":"premio","name":"Jogador Mais Regular (Bola de Ouro 2026)","desc":"","player":"Neno","competition":"","month":"","year":"","emoji":"","id":1793115129329},{"type":"premio","name":"Quebrador de Recordes (Bola de Ouro 2026)","desc":"","player":"Keirrison","competition":"","month":"","year":"","emoji":"","id":1793115152532},{"type":"premio","name":"Rei das Competições (Bola de Ouro 2026)","desc":"","player":"Neno","competition":"","month":"","year":"","emoji":"","id":1793115171629},{"type":"premio","name":"Prêmio Legacy (Bola de Ouro 2026)","desc":"","player":"Kazimiro","competition":"","month":"","year":"","emoji":"","id":1793115201805},{"type":"premio","name":"Jogador do Ano (Bola de Ouro 2026)","desc":"","player":"Keirrison","competition":"","month":"","year":"","emoji":"","id":1793115220716},{"type":"premio","name":"Time Mais Regular/Time do Ano (Bola de Ouro 2026)","desc":"Fortaleza","player":"Neno","competition":"","month":"","year":"","emoji":"","id":1793115243606},{"type":"premio","name":"Seleção do Ano (Bola de Ouro 2026)","desc":"Espanha","player":"Keirrison","competition":"","month":"","year":"","emoji":"","id":1793115276458},{"type":"premio","name":"Bola de Ouro 2026","desc":"Vencedor","player":"Keirrison","competition":"","month":"","year":"","emoji":"","id":1793115299731},{"type":"trofeu","name":"Intercontinental 2026","desc":"","player":"Neno","competition":"Intercontinental","month":"Outubro","year":"2026","emoji":"","id":1793386751742}]/*DATA_END*/;
+
+// Status dos competidores: 'ativo' ou 'aposentado'
+const PLAYERS = /*PLAYERS_START*/{"Neno":{"status":"ativo"},"Kazimiro":{"status":"aposentado"},"Keirrison":{"status":"ativo"}}/*PLAYERS_END*/;
+
 let currentViewFilter = 'all';
 let selectedMonthFilter = null;
 const monthOrder = {"Janeiro": 1, "Fevereiro": 2, "Março": 3, "Abril": 4, "Maio": 5, "Junho": 6, "Julho": 7, "Agosto": 8, "Setembro": 9, "Outubro": 10, "Novembro": 11, "Dezembro": 12};
-function escapeHtml(text) { if (!text) return ''; return text.toString().replace(/[&<>"']/g, m => ({'&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'}[m])); }
+
+function escapeHtml(text) {
+  if (!text) return '';
+  return text.toString().replace(/[&<>"']/g, m => ({'&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'}[m]));
+}
+
 function renderRanking() {
   const rankingEl = document.getElementById('rankingTrofeus');
-  rankingEl.innerHTML = ''; 
-  const competidores = ['Neno', 'Kazimiro', 'Keirrison'];
+  rankingEl.innerHTML = '';
+  const competidores = Object.keys(PLAYERS);
   const trofeus = items.filter(item => item.type === 'trofeu');
-  let contagem = competidores.reduce((acc, c) => ({ ...acc, [c]: 0 }), {});
+  const contagem = competidores.reduce((acc, c) => ({ ...acc, [c]: 0 }), {});
   trofeus.forEach(t => { if (contagem[t.player] !== undefined) contagem[t.player]++; });
-  const rankingOrdenado = competidores.map(c => ({ nome: c, qtd: contagem[c] })).sort((a, b) => b.qtd - a.qtd);
+  const rankingOrdenado = competidores
+    .map(c => ({ nome: c, qtd: contagem[c] }))
+    .sort((a, b) => b.qtd - a.qtd);
+
   rankingOrdenado.forEach(player => {
+    const retired = PLAYERS[player.nome].status === 'aposentado';
     const pill = document.createElement('div');
-    pill.className = `rank-pill player-${player.nome.toLowerCase()}`;
-    pill.textContent = `${player.nome}: ${player.qtd}`;
+    pill.className = `rank-pill player-${player.nome.toLowerCase()}${retired ? ' retired' : ''}`;
+    pill.innerHTML = `<span>${escapeHtml(player.nome)}: ${player.qtd}</span><span class="status-tag ${retired ? 'retired' : 'active'}">${retired ? 'aposentado' : 'ativo'}</span>`;
+    pill.dataset.player = player.nome;
+    pill.title = 'Ver perfil';
     rankingEl.appendChild(pill);
   });
 }
+
+let profiles = /*PROFILES_START*/{"Neno":{"stats":{"vitorias":223,"empates":50,"derrotas":36,"golsPro":323},"records":[],"teams":[{"name":"Fortaleza"},{"name":"PSG"},{"name":"Inglaterra"},{"name":"Argentina"},{"name":"França"},{"name":"Panteras FC"},{"name":"Nigéria"},{"name":"Las Palmas"}],"championships":[{"name":"CAMPPES6","year":"","result":"12V 4E 4D"},{"name":"CDC","year":"","result":"6V 5E 3D"},{"name":"CAMPPES13","year":"","result":"3V 3E 3D"},{"name":"SUPERLIGA","year":"","result":"94V 14E 14D"},{"name":"CHAMPIONS","year":"","result":"12V 0E 1D"},{"name":"SPCCDT","year":"","result":"1V 0E 0D"},{"name":"RIVALS","year":"","result":"2V 1E 4D"},{"name":"EURO","year":"","result":"6V 1E 0D"},{"name":"CDM","year":"","result":"6V 0E 1D"},{"name":"CDMDC","year":"","result":"6V 1E 0D"},{"name":"COPA AMERICA","year":"","result":"5V 1E 0D"},{"name":"LIBERTADORES","year":"","result":"3V 3E 0D"},{"name":"FINALISSIMA","year":"","result":"1V 0E 0D"},{"name":"CDB","year":"","result":"3V 2E 1D"},{"name":"BR","year":"","result":"32V 5E 1D"},{"name":"SCM","year":"","result":"Registro conjunto SCM+SCC: 2V 0E 0D"},{"name":"SCC","year":"","result":"Registro conjunto SCM+SCC: 2V 0E 0D"},{"name":"NATIONS","year":"","result":"9V 0E 0D"},{"name":"SCR","year":"","result":"0V 1E 0D"},{"name":"INTC","year":"","result":"2V 0E 0D"},{"name":"PRES","year":"","result":"0V 0E 0D"},{"name":"SCT","year":"","result":"3V 0E 0D"},{"name":"KINGS","year":"","result":"4V 7E 0D"},{"name":"FLRC","year":"","result":"3V 0E 0D"},{"name":"AFCON","year":"","result":"4V 0E 2D"},{"name":"CDP","year":"","result":"4V 2E 2D"}]},"Kazimiro":{"stats":{"vitorias":168,"empates":31,"derrotas":57,"golsPro":158},"records":[],"teams":[{"name":"Grêmio"},{"name":"Itália"},{"name":"Uruguai"},{"name":"Newcastle"}],"championships":[{"name":"CAMPPES6","year":"","result":"5V 3E 13D"},{"name":"CDC","year":"","result":"0V 0E 4D"},{"name":"CAMPPES13","year":"","result":"0V 2E 6D"},{"name":"SUPERLIGA","year":"","result":"99V 9E 18D"},{"name":"RIVALS","year":"","result":"2V 1E 3D"},{"name":"EURO","year":"","result":"2V 1E 1D"},{"name":"CDMDC","year":"","result":"2V 2E 3D"},{"name":"COPA AMERICA","year":"","result":"4V 1E 1D"},{"name":"LIBERTADORES","year":"","result":"4V 3E 0D"},{"name":"CDB","year":"","result":"8V 2E 0D"},{"name":"BR","year":"","result":"29V 5E 4D"},{"name":"NATIONS","year":"","result":"7V 0E 2D"},{"name":"PRES","year":"","result":"3V 0E 1D"},{"name":"SCT","year":"","result":"3V 0E 0D"},{"name":"RECOPA","year":"","result":"0V 1E 1D"},{"name":"SCR","year":"","result":"0V 1E 0D"}]},"Keirrison":{"stats":{"vitorias":205,"empates":50,"derrotas":57,"golsPro":334},"records":[],"teams":[{"name":"Palmeiras"},{"name":"Milan"},{"name":"Espanha"},{"name":"Colômbia"},{"name":"Portugal"},{"name":"Murash FC"},{"name":"Senegal"},{"name":"Sport Recife"}],"championships":[{"name":"CAMPPES6","year":"","result":"9V 3E 9D"},{"name":"CDC","year":"","result":"5V 5E 4D"},{"name":"CAMPPES13","year":"","result":"7V 1E 1D"},{"name":"SUPERLIGA","year":"","result":"96V 12E 18D"},{"name":"CHAMPIONS","year":"","result":"9V 1E 3D"},{"name":"SPCCDT","year":"","result":"0V 0E 1D"},{"name":"RIVALS","year":"","result":"4V 0E 1D"},{"name":"EURO","year":"","result":"5V 1E 1D"},{"name":"CDM","year":"","result":"7V 0E 0D"},{"name":"CDMDC","year":"","result":"4V 2E 1D"},{"name":"COPA AMERICA","year":"","result":"5V 1E 0D"},{"name":"LIBERTADORES","year":"","result":"1V 2E 1D"},{"name":"CDB","year":"","result":"6V 3E 1D"},{"name":"BR","year":"","result":"26V 8E 4D"},{"name":"SCM","year":"","result":"Registro conjunto SCM+SCC: 0V 0E 2D"},{"name":"SCC","year":"","result":"Registro conjunto SCM+SCC: 0V 0E 2D"},{"name":"NATIONS","year":"","result":"2V 2E 4D"},{"name":"INTC","year":"","result":"0V 0E 1D"},{"name":"PRES","year":"","result":"0V 0E 1D"},{"name":"KINGS","year":"","result":"3V 7E 1D"},{"name":"FLRC","year":"","result":"2V 0E 1D"},{"name":"AFCON","year":"","result":"6V 0E 0D"},{"name":"CDP","year":"","result":"5V 2E 1D"},{"name":"FINALISSIMA","year":"","result":"0V 0E 1D"},{"name":"SCT","year":"","result":"3V 0E 0D"}]}}/*PROFILES_END*/;
+function persistProfiles() {} // página pública: somente leitura
+const CAN_EDIT = false;
+
+// ===== PERFIS (compartilhado entre o admin e a página pública) =====
+// Usa: items, PLAYERS, monthOrder, escapeHtml, profiles, persistProfiles(), CAN_EDIT
+
+const PROFILE_STAT_FIELDS = [
+  ['vitorias', 'Vitórias'], ['empates', 'Empates'], ['derrotas', 'Derrotas'],
+  ['golsPro', 'Gols marcados']
+];
+
+const PROFILE_LISTS = {
+  records: {
+    title: '🏅 Recordes',
+    empty: 'Nenhum recorde registrado ainda.',
+    fields: [
+      { k: 'title', label: 'Recorde', ph: 'Ex: Mais gols em um campeonato' },
+      { k: 'value', label: 'Valor', ph: 'Ex: 42' },
+      { k: 'championship', label: 'Campeonato', ph: 'Ex: Brasileirão 2025' }
+    ]
+  },
+  teams: {
+    title: '🛡️ Times que comandou',
+    empty: 'Nenhum time registrado ainda.',
+    fields: [
+      { k: 'name', label: 'Time', ph: 'Ex: Flamengo' },
+      { k: 'titles', label: 'Títulos', ph: 'Títulos com o time', type: 'number' },
+      { k: 'note', label: 'Observação', ph: 'Opcional' }
+    ]
+  },
+  championships: {
+    title: '🎮 Campeonatos disputados',
+    empty: 'Nenhum campeonato registrado ainda.',
+    fields: [
+      { k: 'name', label: 'Campeonato', ph: 'Ex: Copa do Mundo' },
+      { k: 'year', label: 'Ano', ph: 'Ex: 2025' },
+      { k: 'result', label: 'Campanha / resultado', ph: 'Ex: 5V 2E 1D, Campeão...' }
+    ]
+  }
+};
+
+function emptyProfile() {
+  return {
+    stats: { vitorias: 0, empates: 0, derrotas: 0, golsPro: 0 },
+    records: [], teams: [], championships: []
+  };
+}
+
+function normalizeProfiles() {
+  if (!profiles || typeof profiles !== 'object' || Array.isArray(profiles)) profiles = {};
+  Object.keys(PLAYERS).forEach(name => {
+    const base = emptyProfile();
+    const p = profiles[name] || {};
+    const stats = { ...base.stats };
+    Object.keys(stats).forEach(k => { stats[k] = num(p.stats && p.stats[k]); });
+    profiles[name] = {
+      stats,
+      records: Array.isArray(p.records) ? p.records : [],
+      teams: Array.isArray(p.teams) ? p.teams : [],
+      championships: Array.isArray(p.championships) ? p.championships : []
+    };
+  });
+}
+
+function isProfilesEmpty() {
+  const empty = JSON.stringify(emptyProfile());
+  return Object.keys(PLAYERS).every(n => JSON.stringify(profiles[n]) === empty);
+}
+
+function num(v) {
+  const n = parseInt(v, 10);
+  return Number.isFinite(n) && n > 0 ? n : 0;
+}
+
+normalizeProfiles();
+
+let currentProfileName = Object.keys(PLAYERS)[0];
+
+function playerSlug(name) { return name.toLowerCase().replace('á', 'a'); }
+
+function sortItemsRecent(arr) {
+  return [...arr].sort((a, b) => (b.year || 0) - (a.year || 0) || (monthOrder[b.month] || 0) - (monthOrder[a.month] || 0) || b.id - a.id);
+}
+
+function renderProfileList(key, entries) {
+  const cfg = PROFILE_LISTS[key];
+  const rows = entries.length ? entries.map((e, idx) => {
+    const first = escapeHtml(e[cfg.fields[0].k]);
+    const chips = cfg.fields.slice(1)
+      .filter(f => e[f.k] !== undefined && e[f.k] !== '')
+      .map(f => `<span class="entry-chip">${escapeHtml(f.label)}: ${escapeHtml(e[f.k])}</span>`)
+      .join('');
+    const del = CAN_EDIT ? `<button class="entry-del" data-list="${key}" data-index="${idx}" title="Remover">&times;</button>` : '';
+    return `<li><span class="entry-main"><strong>${first}</strong>${chips}</span>${del}</li>`;
+  }).join('') : `<li class="entry-empty">${cfg.empty}</li>`;
+
+  const form = CAN_EDIT ? `<div class="list-add" data-list="${key}">${
+    cfg.fields.map(f => `<input type="${f.type || 'text'}" ${f.type === 'number' ? 'min="0"' : ''} data-field="${f.k}" placeholder="${escapeHtml(f.ph || f.label)}" aria-label="${escapeHtml(f.label)}">`).join('')
+  }<button type="button" class="action-button list-add-btn" data-list="${key}">Adicionar</button></div>` : '';
+
+  return `<section class="profile-block"><h3>${cfg.title}</h3><ul class="entry-list">${rows}</ul>${form}</section>`;
+}
+
+function renderProfiles() {
+  const selector = document.getElementById('perfilSeletor');
+  const root = document.getElementById('perfilConteudo');
+  if (!selector || !root) return;
+
+  selector.innerHTML = Object.keys(PLAYERS).map(n =>
+    `<button class="profile-pick player-${playerSlug(n)}${n === currentProfileName ? ' active' : ''}" data-player="${escapeHtml(n)}">${escapeHtml(n)}</button>`
+  ).join('');
+
+  const name = currentProfileName;
+  const p = profiles[name];
+  const s = p.stats;
+  const retired = PLAYERS[name].status === 'aposentado';
+  const titulos = items.filter(i => i.type === 'trofeu' && i.player === name);
+  const premios = items.filter(i => i.type === 'premio' && i.player === name);
+  const jogos = s.vitorias + s.empates + s.derrotas;
+  const aproveitamento = jogos ? Math.round(((s.vitorias * 3 + s.empates) / (jogos * 3)) * 100) : 0;
+
+  const tiles = [
+    ['🏆', 'Títulos', titulos.length],
+    ['⭐', 'Prêmios individuais', premios.length],
+    ['🎮', 'Campeonatos disputados', p.championships.length],
+    ['⚽', 'Jogos', jogos],
+    ['📈', 'Aproveitamento', aproveitamento + '%']
+  ].map(([icon, label, value]) =>
+    `<div class="profile-tile"><span class="tile-icon">${icon}</span><span class="tile-value">${value}</span><span class="tile-label">${label}</span></div>`
+  ).join('');
+
+  const statCells = PROFILE_STAT_FIELDS.map(([k, label]) => {
+    const v = s[k];
+    const field = CAN_EDIT
+      ? `<input type="number" min="0" class="stat-input" data-stat="${k}" value="${v}" aria-label="${label}">`
+      : `<strong>${v}</strong>`;
+    return `<div class="stat-cell"><span>${label}</span>${field}</div>`;
+  }).join('');
+
+  const titulosHtml = titulos.length
+    ? sortItemsRecent(titulos).map(t => `<li><span class="entry-main"><span class="entry-emoji">${escapeHtml(t.emoji) || '🏆'}</span><strong>${escapeHtml(t.name)}</strong><span class="entry-chip">${escapeHtml(t.competition)} ${t.month ? escapeHtml(t.month) + '/' : ''}${t.year ? escapeHtml(t.year) : ''}</span></span></li>`).join('')
+    : '<li class="entry-empty">Nenhum título registrado ainda.</li>';
+
+  const premiosHtml = premios.length
+    ? sortItemsRecent(premios).map(t => `<li><span class="entry-main"><span class="entry-emoji">⭐</span><strong>${escapeHtml(t.name)}</strong>${t.desc ? `<span class="entry-chip">${escapeHtml(t.desc)}</span>` : ''}</span></li>`).join('')
+    : '<li class="entry-empty">Nenhum prêmio individual registrado ainda.</li>';
+
+  const importBar = CAN_EDIT ? `<div class="profile-block"><h3>📥 Importar perfis</h3>
+      <p class="profile-note" style="margin-top:0">Carrega estatísticas, times e campeonatos de um arquivo .json de perfis (não mexe nos troféus).</p>
+      <input type="file" id="importProfilesFile" accept=".json" style="display:none">
+      <button type="button" class="action-button secondary-button" id="importProfilesBtn" style="margin-top:10px">Importar perfis (.json)</button></div>` : '';
+
+  root.innerHTML = `
+    <div class="profile-head" style="--pcolor: var(--color-${playerSlug(name)})">
+      <h2>${escapeHtml(name)}</h2>
+      <span class="status-tag ${retired ? 'retired' : 'active'}">${retired ? 'aposentado' : 'ativo'}</span>
+    </div>
+    <div class="profile-tiles">${tiles}</div>
+    <section class="profile-block">
+      <h3>📊 Estatísticas</h3>
+      <div class="stat-grid">${statCells}</div>
+      ${CAN_EDIT ? '<p class="profile-note">Jogos e aproveitamento são calculados automaticamente. Títulos e prêmios vêm dos itens cadastrados na aba Estande.</p>' : ''}
+    </section>
+    <section class="profile-block"><h3>🏆 Títulos</h3><ul class="entry-list">${titulosHtml}</ul></section>
+    <section class="profile-block"><h3>⭐ Prêmios individuais</h3><ul class="entry-list">${premiosHtml}</ul></section>
+    ${renderProfileList('records', p.records)}
+    ${renderProfileList('teams', p.teams)}
+    ${renderProfileList('championships', p.championships)}
+    ${importBar}
+  `;
+}
+
+function showTab(tab) {
+  document.getElementById('viewEstande').style.display = tab === 'perfis' ? 'none' : 'block';
+  document.getElementById('viewPerfis').style.display = tab === 'perfis' ? 'block' : 'none';
+  document.querySelectorAll('#mainTabs .tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
+  if (tab === 'perfis') renderProfiles();
+}
+
+function openProfile(name) {
+  if (!PLAYERS[name]) return;
+  currentProfileName = name;
+  showTab('perfis');
+}
+
+function initProfiles() {
+  document.getElementById('mainTabs').addEventListener('click', e => {
+    const b = e.target.closest('.tab-btn');
+    if (b) showTab(b.dataset.tab);
+  });
+
+  document.getElementById('rankingTrofeus').addEventListener('click', e => {
+    const pill = e.target.closest('.rank-pill');
+    if (pill && pill.dataset.player) openProfile(pill.dataset.player);
+  });
+
+  const view = document.getElementById('viewPerfis');
+
+  view.addEventListener('click', e => {
+    const pick = e.target.closest('.profile-pick');
+    if (pick) { currentProfileName = pick.dataset.player; renderProfiles(); return; }
+    if (!CAN_EDIT) return;
+
+    if (e.target.closest('#importProfilesBtn')) { document.getElementById('importProfilesFile').click(); return; }
+
+    const addBtn = e.target.closest('.list-add-btn');
+    if (addBtn) {
+      const key = addBtn.dataset.list;
+      const cfg = PROFILE_LISTS[key];
+      const box = addBtn.closest('.list-add');
+      const entry = {};
+      cfg.fields.forEach(f => {
+        const raw = box.querySelector(`[data-field="${f.k}"]`).value.trim();
+        entry[f.k] = f.type === 'number' ? String(num(raw)) : raw;
+      });
+      if (!entry[cfg.fields[0].k]) {
+        alert('Preencha pelo menos o campo "' + cfg.fields[0].label + '".');
+        return;
+      }
+      profiles[currentProfileName][key].push(entry);
+      persistProfiles();
+      renderProfiles();
+      return;
+    }
+
+    const delBtn = e.target.closest('.entry-del');
+    if (delBtn) {
+      if (confirm('Remover este registro?')) {
+        profiles[currentProfileName][delBtn.dataset.list].splice(parseInt(delBtn.dataset.index, 10), 1);
+        persistProfiles();
+        renderProfiles();
+      }
+    }
+  });
+
+  view.addEventListener('change', e => {
+    if (!CAN_EDIT) return;
+    if (e.target.id === 'importProfilesFile') {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = ev => {
+        try {
+          const data = JSON.parse(ev.target.result);
+          if (!data || typeof data.profiles !== 'object') throw new Error('formato');
+          if (confirm('Isso irá substituir os perfis atuais (troféus não são alterados). Continuar?')) {
+            profiles = data.profiles;
+            normalizeProfiles();
+            persistProfiles();
+            renderAll();
+            alert('Perfis importados com sucesso!');
+          }
+        } catch (err) { alert('Erro: arquivo de perfis inválido.'); }
+      };
+      reader.readAsText(file);
+      return;
+    }
+    const input = e.target.closest('[data-stat]');
+    if (input) {
+      profiles[currentProfileName].stats[input.dataset.stat] = num(input.value);
+      persistProfiles();
+      renderProfiles();
+    }
+  });
+
+  view.addEventListener('keydown', e => {
+    if (CAN_EDIT && e.key === 'Enter' && e.target.matches('.list-add input')) {
+      e.preventDefault();
+      e.target.closest('.list-add').querySelector('.list-add-btn').click();
+    }
+  });
+}
+document.addEventListener('DOMContentLoaded', initProfiles);
+
 function renderGaleria() {
   const container = document.getElementById('galeriaEstande');
   const monthSubFiltersContainer = document.getElementById('monthSubFilters');
   container.innerHTML = '';
   monthSubFiltersContainer.innerHTML = '';
   monthSubFiltersContainer.style.display = 'none';
+
   let itemsFiltrados = [...items];
+
   if (currentViewFilter === 'by-month') {
     itemsFiltrados = itemsFiltrados.filter(item => item.type === 'trofeu' && item.month);
     if (selectedMonthFilter) {
@@ -97,21 +457,38 @@ function renderGaleria() {
   } else if (currentViewFilter === 'trofeu' || currentViewFilter === 'premio') {
     itemsFiltrados = itemsFiltrados.filter(item => item.type === currentViewFilter);
   }
+
   const filtroComp = document.getElementById('filtroCompetidor').value;
   const filtroBusca = document.getElementById('filtroBusca').value.trim().toLowerCase();
-  if (filtroComp) { itemsFiltrados = itemsFiltrados.filter(item => item.player === filtroComp); }
-  if (filtroBusca) { itemsFiltrados = itemsFiltrados.filter(item => { const searchString = [item.name, item.competition, item.month, item.year, item.desc].join(' ').toLowerCase(); return searchString.includes(filtroBusca); }); }
-  if (currentViewFilter === 'recent') { itemsFiltrados.sort((a, b) => b.id - a.id); } else { itemsFiltrados.sort((a, b) => (b.year || 0) - (a.year || 0) || (monthOrder[b.month] || 0) - (monthOrder[a.month] || 0) || b.id - a.id); }
+
+  if (filtroComp) {
+    itemsFiltrados = itemsFiltrados.filter(item => item.player === filtroComp);
+  }
+  if (filtroBusca) {
+    itemsFiltrados = itemsFiltrados.filter(item => {
+      const searchString = [item.name, item.competition, item.month, item.year, item.desc].join(' ').toLowerCase();
+      return searchString.includes(filtroBusca);
+    });
+  }
+
+  if (currentViewFilter === 'recent') {
+    itemsFiltrados.sort((a, b) => b.id - a.id);
+  } else {
+    itemsFiltrados.sort((a, b) => (b.year || 0) - (a.year || 0) || (monthOrder[b.month] || 0) - (monthOrder[a.month] || 0) || b.id - a.id);
+  }
+
   if (currentViewFilter === 'by-month') {
     monthSubFiltersContainer.style.display = 'flex';
     const allMonthsInView = [...new Set(items.filter(i => i.type === 'trofeu' && i.month).map(i => i.month))];
     allMonthsInView.sort((a, b) => monthOrder[b] - monthOrder[a]);
+
     const allBtn = document.createElement('button');
     allBtn.className = 'month-shortcut-btn';
     allBtn.textContent = 'Ver Todos os Meses';
     allBtn.dataset.month = 'all';
     if (!selectedMonthFilter) allBtn.classList.add('active');
     monthSubFiltersContainer.appendChild(allBtn);
+
     allMonthsInView.forEach(month => {
       const button = document.createElement('button');
       button.className = 'month-shortcut-btn';
@@ -121,31 +498,45 @@ function renderGaleria() {
       monthSubFiltersContainer.appendChild(button);
     });
   }
-  if (itemsFiltrados.length === 0) { container.innerHTML = '<p class="emptyMsg">Nenhum item encontrado.</p>'; return; }
+
+  if (itemsFiltrados.length === 0) {
+    container.innerHTML = '<p class="emptyMsg">Nenhum item encontrado.</p>';
+    return;
+  }
+
   itemsFiltrados.forEach(item => {
     const card = document.createElement('div');
     card.className = 'trofeuCard';
     const playerClass = `player-${item.player.toLowerCase().replace('á', 'a')}`;
     const isTrofeu = item.type === 'trofeu';
-    const competitionText = isTrofeu ? `${escapeHtml(item.competition)} ${item.month ? escapeHtml(item.month)+'/': ''}${item.year ? escapeHtml(item.year) : ''}` : 'Prêmio Individual';
+    const competitionText = isTrofeu ? `${escapeHtml(item.competition)} ${item.month ? escapeHtml(item.month) + '/' : ''}${item.year ? escapeHtml(item.year) : ''}` : 'Prêmio Individual';
     const icon = escapeHtml(item.emoji) || (isTrofeu ? '🏆' : '⭐');
-    card.innerHTML = `<div class="trofeu-icon">${icon}</div><h3>${escapeHtml(item.name)}</h3><p>${competitionText}</p><p style="font-size:12px; font-style:italic;">${escapeHtml(item.desc)}</p><span class="player-badge ${playerClass}">${escapeHtml(item.player)}</span>`;
+    card.innerHTML = `
+      <div class="trofeu-icon">${icon}</div>
+      <h3>${escapeHtml(item.name)}</h3>
+      <p>${competitionText}</p>
+      <p style="font-size:12px; font-style:italic;">${escapeHtml(item.desc)}</p>
+      <span class="player-badge ${playerClass}">${escapeHtml(item.player)}</span>
+    `;
     container.appendChild(card);
   });
 }
-function renderAll() { renderRanking(); renderGaleria(); }
+
+function renderAll() { renderRanking(); renderGaleria(); renderProfiles(); }
+
 document.addEventListener('DOMContentLoaded', () => {
   const viewFiltersContainer = document.getElementById('viewFilters');
   viewFiltersContainer.addEventListener('click', (e) => {
     const button = e.target.closest('.view-filter-btn');
     if (button && !button.classList.contains('active')) {
       currentViewFilter = button.dataset.filter;
-      selectedMonthFilter = null; 
+      selectedMonthFilter = null;
       viewFiltersContainer.querySelector('.active').classList.remove('active');
       button.classList.add('active');
       renderGaleria();
     }
   });
+
   document.getElementById('monthSubFilters').addEventListener('click', (e) => {
     const button = e.target.closest('.month-shortcut-btn');
     if (button) {
@@ -154,11 +545,12 @@ document.addEventListener('DOMContentLoaded', () => {
       renderGaleria();
     }
   });
+
   document.getElementById('filtroCompetidor').addEventListener('change', renderGaleria);
   document.getElementById('filtroBusca').addEventListener('input', renderGaleria);
+
   renderAll();
 });
 </script>
 </body>
 </html>
-    
